@@ -1,18 +1,26 @@
-const apiKey = '47286351-e716f5558799522fb527bbff6';
-const apiUrl = `https://pixabay.com/api/?key=${apiKey}&editors_choice=true&image_type=photo&per_page=4`;
+const API_KEY = '47286351-e716f5558799522fb527bbff6';
+const BASE_URL = 'https://pixabay.com/api';
 
-export function fetchImagesFromServer(page) {
-  return fetch(`${apiUrl}&page=${page}`)
-    .then(response => response.json())
-    .then(data => {
-      if (!Array.isArray(data.hits)) {
-        console.error('Error');
-        return [];
+export default class NewGalleryApi {
+  constructor() {
+    this.page = 1;
+    this.perPage = 3;
+  }
+
+  fetchImages() {
+    const url = `${BASE_URL}?key=${API_KEY}&editors_choice=true&per_page=${this.perPage}&page=${this.page}`;
+    return fetch(url).then(r => {
+      if (!r.ok) {
+        throw new Error('Error 404');
       }
-      return data.hits;
-    })
-    .catch(error => {
-      console.error('Something went wrong', error);
-      return [];
+      return r.json();
     });
+  }
+  incrementPage() {
+    this.page += 1;
+  }
+
+  resetPage() {
+    this.page = 1;
+  }
 }
