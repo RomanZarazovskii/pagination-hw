@@ -5,20 +5,15 @@ const btn = document.getElementById('btn');
 
 const galleryApi = new NewGalleryApi();
 
-document.addEventListener('DOMContentLoaded', () => {
-  galleryApi.fetchImages().then(({ hits }) => {
-    renderImages(hits);
-    galleryApi.incrementPage();
-  });
-});
-
 btn.addEventListener('click', onLoadMore);
 
-function onLoadMore() {
-  galleryApi.fetchImages().then(({ hits }) => {
-    renderImages(hits);
-    galleryApi.incrementPage();
-  });
+fetchImages();
+
+function fetchImages() {
+  galleryApi
+    .fetchImages()
+    .then(images => renderImages(images))
+    .catch(error => console.log(error));
 }
 
 function renderImages(images) {
@@ -32,4 +27,8 @@ function renderImages(images) {
     })
     .join('');
   gallery.insertAdjacentHTML('beforeend', markUp);
+}
+
+function onLoadMore() {
+  fetchImages();
 }

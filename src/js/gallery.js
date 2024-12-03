@@ -9,12 +9,14 @@ export default class NewGalleryApi {
 
   fetchImages() {
     const url = `${BASE_URL}?key=${API_KEY}&editors_choice=true&per_page=${this.perPage}&page=${this.page}`;
-    return fetch(url).then(r => {
-      if (!r.ok) {
-        throw new Error('Error 404');
-      }
-      return r.json();
-    });
+    return fetch(url)
+      .then(r => {
+        return r.json();
+      })
+      .then(({ hits }) => {
+        this.incrementPage();
+        return hits;
+      });
   }
   incrementPage() {
     this.page += 1;
